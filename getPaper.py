@@ -2,6 +2,7 @@ import datetime
 import urllib
 import os, sys
 import re
+import shutil
 from pyPdf import PdfFileWriter, PdfFileReader
 
 
@@ -16,15 +17,15 @@ def main():
   _urlMMDDYY = str(now.day) + str(now.month) + str(now.year)
   paperURL = _urlbase + _urlMMDDYY + "/"
 
-  _paperDirectory = "paper/" + _urlMMDDYY
+  _cachedPaperDir = "cache/" + _urlMMDDYY
 
   # Creating Daily Directory
-  if not os.path.exists(_paperDirectory):
-    os.mkdir(_paperDirectory, 0755)
+  if not os.path.exists(_cachedPaperDir):
+    os.mkdir(_cachedPaperDir, 0755)
   else:
     print "Directory Exists"
 
-  print "Download Directory: ", _paperDirectory
+  print "Download Directory: ", _cachedPaperDir
 
 
   # Printing Paper
@@ -34,12 +35,16 @@ def main():
   while (resume == True):
     pageURL = paperURL + _urlMMDDYY + "-md-hr-" + str(startIndex) + ".pdf"
     print "Downloading Page: ", pageURL
-    resume = download_file(pageURL, _paperDirectory, startIndex)
+    resume = download_file(pageURL, _cachedPaperDir, startIndex)
     startIndex += 1
 
   # Merging PDF
-  _paperDirectoryMerge = _paperDirectory + "/merged"
-  mergePDF(_paperDirectory, _paperDirectoryMerge)
+  _paperDirectoryOutput = "paper"
+  mergePDF(_cachedPaperDir, _paperDirectoryOutput)
+
+  # Cleanup
+  print "Deleting: ", _cachedPaperDir
+  shutil.rmtree(_cachedPaperDir)
 
   print "Program End"
 
@@ -67,11 +72,8 @@ def download_file(download_url, location, part):
   return _continue
 
 def mergePDF(_inputDir, _outputDir):
-  print "InputDir: ", _inputDir
-  print "OutputDir: ", _outputDir
-
   _now = datetime.datetime.now()
-  _outputFileMerged = "THT-" + str(_now.month) + str(_now.day) + str(_now.year)
+  _outputFileMerged = _outputDir + "/" + "THT-" + str(_now.month) + str(_now.day) + str(_now.year)
 
   fileList = []
   output = PdfFileWriter()

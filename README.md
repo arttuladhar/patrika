@@ -8,3 +8,5 @@ pip install -r requirements.txt
 ```
 python getPaper.py
 ```
+
+Downloads Daily Nepali Newspaper

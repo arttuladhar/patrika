@@ -1,4 +1,4 @@
-# Getting Started
+# Install
 
 ```
 pip install -r requirements.txt
@@ -9,4 +9,6 @@ pip install -r requirements.txt
 python getPaper.py
 ```
 
-Downloads Daily Nepali Newspaper
+# Patrika
+
+A python script to download daily Nepali Newspaper from various sources.
